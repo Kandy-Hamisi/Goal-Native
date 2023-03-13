@@ -1,15 +1,43 @@
 import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function App() {
+
+  const [enteredGoalText, setEnteredGoalText] = useState("");
+  const [allGoals, setAllGoals] = useState([]);
+
+  function goalInputhandler (enteredText) {
+    setEnteredGoalText(enteredText);
+  };
+
+  function addGoalHandler () {
+    setAllGoals(currentCourseGoals => [
+      ...currentCourseGoals,
+      enteredGoalText
+    ]);
+    setEnteredGoalText("");
+  };
+
   return (
     <View style={styles.appContainer}>
       <View style={styles.inputContainer}>
-        <TextInput style={styles.textInput} placeholder='Your course goal' />
-        <Button title="Add Goal"/>
+        <TextInput
+          style={styles.textInput}
+          placeholder='Your course goal'
+          value={enteredGoalText}
+          onChangeText={goalInputhandler}
+        />
+        <Button title="Add Goal" onPress={addGoalHandler} />
       </View>
       <View style={styles.goalsContainer}>
-        <Text>List of Goals....</Text>
+          {
+            allGoals.map((goal, index) => (
+              <View style={styles.goal} key={index}>
+                <Text style={styles.goalText}>{goal}</Text>
+              </View>
+            ))
+          }
       </View>
       {/* <StatusBar style="auto" /> */}
     </View>
@@ -23,10 +51,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   inputContainer: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: 24,
+    marginBottom: 24,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc'
   },
@@ -39,5 +68,14 @@ const styles = StyleSheet.create({
   },
   goalsContainer: {
     flex: 4,
+  },
+  goal: {
+    margin: 5,
+    borderRadius: 6,
+    padding: 8,
+    backgroundColor: "#5e0acc",
+  },
+  goalText: {
+    color: 'white',
   }
 });
